@@ -19,7 +19,7 @@ def encrypt(text,s):
          result += chr((ord(char) + s - 97) % 26 + 97)
       return result
 #check the above function
-text = "mast hai bro "
+text = "CEASER CIPHER DEMO"
 s = 4
 
 print ("Plain Text : " + text)
