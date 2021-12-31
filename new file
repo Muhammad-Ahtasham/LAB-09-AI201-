@@ -1,0 +1,342 @@
+#include <iostream>
+using namespace std;
+
+//Set items, shops and inventory of the shop.
+
+class Node{
+public:
+	string Name;
+	Node* Next;
+	
+	Node(){
+		Next = NULL;
+	}
+	
+};
+
+//Item Class to ADD Class...................
+class Item{
+public:
+	string Name;
+	float Price;
+	Item *Next;
+	
+	Item(){
+		Next = NULL;
+		cout << "Enter Name: ";
+		cin >> Name;
+		cout << "Entr Price: ";
+		cin >> Price;
+	}
+};
+
+//Just to find Path..............
+class Graph{
+	string *Vertices;
+	int **Edges; **Cost;
+	int **TCP_Edg; **TCP_Cst;
+public:
+	
+	Graph(){
+		Vertices = NULL;
+		Edges = NULL;
+		Cost = NULL;
+		TCP_Edg = NULL;
+		TCP_Cst = NULL;
+	}
+	
+	void Set_Graph();
+	Node *Get_Path();
+	void Display();
+};
+
+//Just to add shop in the code........
+class Shop{
+	string Name;
+	Node *items;
+public:
+	
+	Shop *Next;
+	
+	Shop(){
+		cout << "Enter the Name of the Shop: ";
+		cin >> Name;
+		items = NULL;
+		Next = NULL;
+	}
+	
+	void Add_Item(Item* I){
+		Item *Temp = I;
+		while(Temp != NULL){
+			cout << Temp->Name << "\t" << Temp->Price << endl;
+			Temp = Temp->Next;
+		}
+		cout << "Enter Name of the Item you want to Enter: ";
+		string New;
+		cin >> New;
+		Node *Old = items;
+		Temp = I;
+		bool Found = false;
+		while(Temp != NULL){
+			if(Temp->Name == New){
+				Found = true;
+				break;
+			}
+			Temp = Temp->Next;
+		}
+		if(Found != true){
+			cout << "Wrong Input.......\n";
+			return;
+		}
+		if(items == NULL){
+			items = new Node;
+			items->Name = New;
+			cout << "Added : " << items->Name << endl;
+			return;
+		}
+		while(Old != NULL){
+			if(Old->Name == New){
+				cout << "Already added into the Shop...........\n";
+				return;
+			}
+			Old = Old->Next;
+		}
+		Node *T = new Node;
+		T->Next = items;
+		T->Name = New;
+		items = T;
+		cout << "Added : " << items->Name << endl;
+	}
+	
+	void Remove_Item();
+	void Pop(string Shop);
+	void Push(string NAME);
+};
+
+//Set orders from Others and collect important Data....
+class Order{
+	string Name, Destination;
+	int Total_Price, Total_Items;
+	Node *Items;
+public:
+	Order(){
+		Items = NULL;
+	}
+	
+	void Set_Order();
+	void Remove_Order();
+	void Change_Order();
+	Order* Pop();
+};
+
+class Order_Node{
+public:
+	Order *Current;
+	Order_Node *Next;
+	
+	Order_Node(){
+		Current = NULL;
+		Next = NULL;
+	}
+};
+
+//All difficult working and core programming is done here.....
+class Rider{
+	Order_Node *Orders;
+	string Name;
+	int Total_orders;
+	int Limit;
+	Node *Path;
+	string *Dectinations;
+	
+public:
+	Rider(){
+		Orders = NULL;
+		Path = NULL;
+		Dectinations = NULL;
+	}
+	
+	void get_Orders();
+	void get_Path();
+};
+
+//Just Node from Rider Class........
+class Rider_Node{
+
+public:
+	Rider *Current;
+	Rider *Next;
+	
+	Rider_Node(){
+		Current = NULL;
+		Next = NULL;
+	}
+	
+	void Add_Rider();
+	
+};
+
+//Queue for Storing Riders and Orders in code........ 
+class Queue{
+	Order *f_O, *l_O;
+	Rider *F_R, *L_R;
+
+public:
+	Queue(){
+		f_O = NULL;
+		l_O = NULL;
+		F_R = NULL;
+		L_R = NULL;
+	}
+};
+
+void HUB(){
+	char Choice;
+	Item *Base_I = NULL;
+	Shop *Base_S = NULL;
+	while(Choice != 'Q' && Choice != 'q'){
+		system("cls");
+		cout << "1) Open Item Settings\n"
+			 << "2) Open Shop Settings\n"
+			 << "q) Quit\n"
+			 << "Enter Your Choice: ";
+		cin >> Choice;
+		switch(Choice){
+			case '1':{
+				while(Choice != 'Q' && Choice != 'q'){
+					system("cls");
+					cout << "1) Add Item\n"
+						 << "2) Delete Item\n"
+						 << "3) Change Item\n"
+						 << "4) Display\n"
+						 << "q) Back to menu\n"
+						 << "Enter your option: ";
+					cin >> Choice;
+					switch(Choice){
+						case '1':{
+							if(Base_I == NULL){
+								Base_I =new Item;
+								break;
+							}
+							Item *Tail = new Item;
+							Tail->Next = Base_I;
+							Base_I = Tail;
+							break;
+						}
+						case '2':{
+							Item* Temp = Base_I;
+							cout << "Name\t\t\tPrice\n";
+							while(Temp != NULL){
+								cout << Temp->Name << "\t\t" << Temp->Price << "\n";
+								Temp = Temp->Next;
+							}
+							cout << "Enter Item you Want to Delete: ";
+							string input;
+							cin >> input;
+							Temp = Base_I;
+							Item *Pre = Base_I;
+							if(Temp->Name == input){
+								if(Temp->Next == NULL){
+									Base_I = NULL;
+									break;
+								}
+								Temp = Temp->Next;
+								break;
+							}
+							while(Temp != NULL){
+								if(Temp->Name == input){
+									Pre->Next = Temp->Next;
+									cout << "............Done............\n";
+									system("pause");
+									break;
+								}
+								Pre = Temp;
+								Temp = Temp->Next;
+							}
+							cout << "..........NOTHING FOUND............\n";
+							system("pause");
+							break;
+						}
+						case '3':{
+							Item* Temp = Base_I;
+							cout << "Name\t\t\tPrice\n";
+							while(Temp != NULL){
+								cout << Temp->Name << "\t\t" << Temp->Price << "\n";
+								Temp = Temp->Next;
+							}
+							cout << "Enter Item you Want to Edit: ";
+							string input;
+							cin >> input;
+							Temp = Base_I;
+							while(Temp != NULL){
+								if(Temp->Name == input){
+									cout << "Enter New Name: ";
+									cin >> Temp->Name;
+									cout << "Enter New Price: ";
+									cin >> Temp->Price;
+									break;
+								}
+								Temp = Temp->Next;
+							}
+							break;
+						}
+						case '4':{
+							Item* Temp = Base_I;
+							while(Temp != NULL){
+								cout << Temp->Name << "\t\t" << Temp->Price << "\n";
+								Temp = Temp->Next;
+							}
+							system("pause");
+							break;
+						}
+					}
+				}
+				Choice = '0';
+				break;
+			}
+			case '2':{
+				while(Choice != 'Q' && Choice != 'q'){
+					system("cls");
+					cout << "1) Add Shop\n"
+						 << "2) Delete Shop\n"
+						 << "3) Edit Shop\n"
+						 << "4) Display Shop\n"
+						 << "5) Display Shops Names\n"
+						 << "q) Back to menu\n"
+						 << "Enter your option: ";
+					cin >> Choice;
+					switch(Choice){
+						case '1':{
+							if(Base_S == NULL){
+								Base_S =new Shop;
+							}else{
+								Shop *Tail = new Shop;
+								Tail->Next = Base_S;
+								Base_S = Tail;
+							}
+							cout << "Enter How Many items you want to have currently: ";
+							int X;
+							cin >> X;
+							for(int x = X; x>0; x--){
+								Base_S->Add_Item(Base_I);
+							}
+							break;
+						}
+						case '2':{
+							//pass
+							break;
+						}
+					}
+					Choice = '0';
+					break;
+				}
+			}
+		}
+	}
+}
+
+//Global Variable for the best working enviroment............
+
+int main(){
+	HUB();
+}
